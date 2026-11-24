@@ -1,0 +1,503 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Compare Two Designs Starter</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Public+Sans:wght@400;600;700&display=swap">
+<style>
+  /* Layout: one reading column; the live interaction sits on its own "LMS page" surface, then the steps, then the code. */
+  :root {
+    --bg: #F7F7F7;
+    --surface: #FFFFFF;
+    --fg: #1F2224;
+    --muted: #494C4E;
+    --line: #D9DADB;
+    --accent: #8E0F09;
+    --code-bg: #1F2224;
+    --code-fg: #EDEDEB;
+    --display: 'Libre Baskerville', Georgia, serif;
+    --body: 'Public Sans', Arial, sans-serif;
+    --mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #17191A; --surface: #222527; --fg: #EDEDEB; --muted: #B9BCBE; --line: #3A3E41;
+      --accent: #F0918A; --code-bg: #0F1112; --code-fg: #E3E3E0; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #17191A; --surface: #222527; --fg: #EDEDEB; --muted: #B9BCBE; --line: #3A3E41;
+    --accent: #F0918A; --code-bg: #0F1112; --code-fg: #E3E3E0; color-scheme: dark;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.6; }
+  .page {
+    max-width: 820px; margin: 0 auto;
+    padding-block: 48px 72px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: flex; flex-direction: column; gap: 48px;
+  }
+  .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
+  h1 { font-family: var(--display); font-size: clamp(30px, 5vw, 44px); line-height: 1.15; margin: 0 0 16px; text-wrap: balance; }
+  h2 { font-family: var(--display); font-size: 24px; line-height: 1.25; margin: 0 0 16px; text-wrap: balance; }
+  p { margin: 0 0 12px; max-width: 65ch; }
+  .lead { color: var(--muted); font-size: 18px; }
+  a { color: var(--accent); }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .lms { background: #FFFFFF; color: #1F2224; border: 1px solid var(--line); border-radius: 8px; padding: 8px 24px; overflow-x: auto; }
+  .lms-label { font-size: 13px; color: var(--muted); margin: 8px 0 0; }
+  ol.steps { margin: 0; padding-left: 1.4em; display: flex; flex-direction: column; gap: 10px; max-width: 65ch; }
+  .code-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+  .code-head h2 { margin: 0; }
+  .copy {
+    font: inherit; font-weight: 600; font-size: 15px; padding: 8px 16px; border-radius: 6px; cursor: pointer;
+    background: var(--fg); color: var(--bg); border: 2px solid var(--fg);
+  }
+  .copy:hover { background: var(--muted); border-color: var(--muted); }
+  .status { font-size: 14px; color: var(--muted); min-height: 1.4em; margin: 8px 0 0; }
+  pre { margin: 0; background: var(--code-bg); color: var(--code-fg); border-radius: 8px; padding: 20px; overflow: auto; max-height: 520px; font-family: var(--mono); font-size: 13px; line-height: 1.55; tab-size: 2; }
+  .note { font-size: 15px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<main class="page">
+  <header>
+    <p class="eyebrow">ETUG Fall Workshop 2026 · Starter snippet</p>
+    <h1>Compare two designs, choose the stronger one</h1>
+    <p class="lead">A self-check you paste straight into your LMS page’s HTML source. No plugin, no integration, no uploaded files. Try it below, then copy the code and make it your own.</p>
+  </header>
+
+  <section aria-labelledby="try-h">
+    <h2 id="try-h">Try it</h2>
+    <div class="lms">
+<!--
+  STARTER SNIPPET: Compare two designs, choose the stronger one
+  ETUG Fall Workshop 2026, "No Plugin or Integration Required"
+
+  HOW TO USE
+  1. Open your LMS page in its HTML source editor.
+  2. Paste this whole snippet where you want the interaction to appear.
+  3. Save, then test it: click through it, then try it with the keyboard only
+     (Tab to move, arrow keys to choose, Enter or Space on the buttons).
+
+  WHAT TO CHANGE
+  - The goal, the two designs and the feedback text (search for "EDIT").
+  - Which option is correct: the data-answer attribute on the <form>.
+  - Colours: search for the hex values (e.g. #8E0F09) and replace them.
+  - The prefix "tiy1-": if you put two of these on one page, change it to
+    "tiy2-" (or similar) everywhere in the second copy so they don't collide.
+
+  WHY IT'S BUILT THIS WAY
+  - All CSS is inline because many LMS editors strip <style> blocks on save.
+    Hover and focus effects are done in JavaScript for the same reason.
+  - Every property is set explicitly so the LMS or template stylesheet
+    can't restyle the buttons, fieldset or labels.
+  - The fieldset's legend is visually hidden; the visible question is a
+    paragraph linked with aria-describedby, which avoids the legend "notch".
+  - The real radio buttons are visually hidden, not removed, so keyboards and
+    screen readers still use them. The visible circles are drawn with spans.
+  - Start Over clears the drawn circles itself, because form.reset()
+    doesn't fire change events.
+  - The script is wrapped in an IIFE so it can't clash with other scripts.
+-->
+<div id="tiy1-wrap" style="box-sizing:border-box; max-width:760px; margin:1.5rem 0; padding:1.5rem; background:#ECECEC; border:1px solid #CFCFCF; border-radius:6px; font-family:inherit; font-size:1rem; line-height:1.5; color:#1F2224;">
+
+  <h3 style="margin:0 0 0.5rem 0; font-size:1.25rem; font-weight:700; line-height:1.3; color:#1F2224;">Try It Yourself</h3>
+
+  <!-- EDIT: instructions to the learner -->
+  <p style="margin:0 0 1rem 0; color:#494C4E;">Read the goal, compare the two quiz questions, and choose the one that does a better job of meeting it. This is a self-check with no grade attached.</p>
+
+  <!-- data-answer = the value of the correct option ("a" or "b") -->
+  <form id="tiy1-form" data-answer="b" style="margin:0; padding:0;">
+
+    <fieldset style="box-sizing:border-box; margin:0 0 1rem 0; padding:1rem 1.25rem; min-width:0; background:#FFFFFF; border:1px solid #CCCCCC; border-radius:6px;">
+      <legend style="position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;">Choose the stronger design</legend>
+
+      <!-- EDIT: the goal both designs are judged against -->
+      <p id="tiy1-goal" style="margin:0 0 1rem 0; font-weight:600; color:#1F2224;">Goal: Students can apply the idea of opportunity cost to an everyday decision. Which quiz question checks that better?</p>
+
+      <div style="display:flex; flex-wrap:wrap; gap:1rem;">
+
+        <!-- Option A -->
+        <label for="tiy1-a" style="box-sizing:border-box; flex:1 1 260px; display:flex; gap:0.75rem; align-items:flex-start; margin:0; padding:1rem; background:#F7F7F7; border:1px solid #CCCCCC; border-radius:6px; cursor:pointer; font-weight:400; color:#1F2224;">
+          <input type="radio" id="tiy1-a" name="tiy1-choice" value="a" aria-describedby="tiy1-goal" style="position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;">
+          <span class="tiy1-circle" aria-hidden="true" style="box-sizing:border-box; flex:0 0 auto; display:flex; align-items:center; justify-content:center; width:1.25rem; height:1.25rem; margin-top:0.15rem; border:2px solid #494C4E; border-radius:50%; background:#FFFFFF;">
+            <span class="tiy1-dot" style="display:none; width:0.6rem; height:0.6rem; border-radius:50%; background:#1F2224;"></span>
+          </span>
+          <span style="display:block;">
+            <span style="display:block; font-weight:700; margin-bottom:0.25rem;">Design A</span>
+            <!-- EDIT: design A -->
+            <span style="display:block;">“Define opportunity cost.”</span>
+          </span>
+        </label>
+
+        <!-- Option B -->
+        <label for="tiy1-b" style="box-sizing:border-box; flex:1 1 260px; display:flex; gap:0.75rem; align-items:flex-start; margin:0; padding:1rem; background:#F7F7F7; border:1px solid #CCCCCC; border-radius:6px; cursor:pointer; font-weight:400; color:#1F2224;">
+          <input type="radio" id="tiy1-b" name="tiy1-choice" value="b" aria-describedby="tiy1-goal" style="position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;">
+          <span class="tiy1-circle" aria-hidden="true" style="box-sizing:border-box; flex:0 0 auto; display:flex; align-items:center; justify-content:center; width:1.25rem; height:1.25rem; margin-top:0.15rem; border:2px solid #494C4E; border-radius:50%; background:#FFFFFF;">
+            <span class="tiy1-dot" style="display:none; width:0.6rem; height:0.6rem; border-radius:50%; background:#1F2224;"></span>
+          </span>
+          <span style="display:block;">
+            <span style="display:block; font-weight:700; margin-bottom:0.25rem;">Design B</span>
+            <!-- EDIT: design B -->
+            <span style="display:block;">“You have $50 and can buy either a used textbook or a concert ticket. You buy the textbook. What is your opportunity cost, and why?”</span>
+          </span>
+        </label>
+
+      </div>
+    </fieldset>
+
+    <div style="display:flex; flex-wrap:wrap; gap:0.75rem;">
+      <button type="button" id="tiy1-check" style="box-sizing:border-box; margin:0; padding:0.5rem 1rem; font:inherit; font-weight:600; line-height:1.4; color:#FFFFFF; background:#1F2224; border:2px solid #1F2224; border-radius:4px; cursor:pointer; outline:none;">Check my answer</button>
+      <button type="button" id="tiy1-reset" style="box-sizing:border-box; margin:0; padding:0.5rem 1rem; font:inherit; font-weight:600; line-height:1.4; color:#1F2224; background:#FFFFFF; border:2px solid #1F2224; border-radius:4px; cursor:pointer; outline:none;">Start over</button>
+    </div>
+
+    <!-- Feedback appears here. role="status" means screen readers announce it. -->
+    <div id="tiy1-feedback" role="status" style="display:none; margin-top:1rem; padding:0.75rem 1rem; border-left:5px solid transparent; border-radius:4px; color:#1F2224;"></div>
+
+  </form>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var form = document.getElementById("tiy1-form");
+  if (!form) { return; }
+
+  var radios = form.querySelectorAll('input[name="tiy1-choice"]');
+  var checkBtn = document.getElementById("tiy1-check");
+  var resetBtn = document.getElementById("tiy1-reset");
+  var feedback = document.getElementById("tiy1-feedback");
+
+  // EDIT: feedback for each choice. Explain why, not just right or wrong.
+  var FEEDBACK = {
+    a: "Design A asks students to recall a definition. Someone could answer it perfectly without being able to use the idea. Design B is stronger for this goal.",
+    b: "Design B puts students in a realistic decision and asks them to apply the idea and explain their reasoning. That's what the goal asks for. Design A only checks whether they remember the definition."
+  };
+
+  // Colours. Status is always stated in words too, never by colour alone.
+  var COLOURS = {
+    correct:   { text: "#1B5E20", border: "#1B5E20", bg: "#E8F5E9" },
+    incorrect: { text: "#8E0F09", border: "#8E0F09", bg: "#FBEAEA" },
+    focus: "#3243DC"
+  };
+
+  // Show the drawn dot for whichever real radio button is checked.
+  function syncDots() {
+    radios.forEach(function (radio) {
+      var dot = radio.parentNode.querySelector(".tiy1-dot");
+      dot.style.display = radio.checked ? "block" : "none";
+    });
+  }
+
+  radios.forEach(function (radio) {
+    var circle = radio.parentNode.querySelector(".tiy1-circle");
+    var card = radio.parentNode;
+
+    radio.addEventListener("change", syncDots);
+
+    // Focus is shown on the drawn circle and its card, since the real input is hidden.
+    radio.addEventListener("focus", function () {
+      circle.style.outline = "3px solid " + COLOURS.focus;
+      circle.style.outlineOffset = "2px";
+      card.style.borderColor = COLOURS.focus;
+    });
+    radio.addEventListener("blur", function () {
+      circle.style.outline = "none";
+      card.style.borderColor = "#CCCCCC";
+    });
+  });
+
+  function showFeedback(kind, heading, text) {
+    var c = COLOURS[kind];
+    feedback.style.display = "block";
+    feedback.style.background = c.bg;
+    feedback.style.borderLeftColor = c.border;
+    feedback.innerHTML = "";
+    var strong = document.createElement("strong");
+    strong.textContent = heading + " ";
+    strong.style.color = c.text;
+    feedback.appendChild(strong);
+    feedback.appendChild(document.createTextNode(text));
+  }
+
+  checkBtn.addEventListener("click", function () {
+    var selected = form.querySelector('input[name="tiy1-choice"]:checked');
+    if (!selected) {
+      showFeedback("incorrect", "Choose a design first.", "Select Design A or Design B, then check your answer.");
+      return;
+    }
+    var isCorrect = selected.value === form.getAttribute("data-answer");
+    showFeedback(isCorrect ? "correct" : "incorrect", isCorrect ? "Correct." : "Not quite.", FEEDBACK[selected.value]);
+  });
+
+  resetBtn.addEventListener("click", function () {
+    form.reset();
+    // form.reset() doesn't fire change events, so clear the drawn dots by hand.
+    syncDots();
+    feedback.style.display = "none";
+    feedback.innerHTML = "";
+    radios[0].focus();
+  });
+
+  // Hover and focus styles for the buttons (done in JavaScript because
+  // many LMS editors strip the <style> blocks that would normally hold them).
+  function addButtonStates(btn, normalBg, normalText, hoverBg, hoverText) {
+    function on()  { btn.style.background = hoverBg;  btn.style.color = hoverText; }
+    function off() { btn.style.background = normalBg; btn.style.color = normalText; }
+    btn.addEventListener("mouseenter", on);
+    btn.addEventListener("mouseleave", off);
+    btn.addEventListener("focus", function () {
+      btn.style.outline = "3px solid " + COLOURS.focus;
+      btn.style.outlineOffset = "2px";
+    });
+    btn.addEventListener("blur", function () { btn.style.outline = "none"; });
+  }
+  addButtonStates(checkBtn, "#1F2224", "#FFFFFF", "#494C4E", "#FFFFFF");
+  addButtonStates(resetBtn, "#FFFFFF", "#1F2224", "#ECECEC", "#1F2224");
+})();
+</script>
+
+    </div>
+    <p class="lms-label">Shown as it would look on a plain LMS content page. Try it with the keyboard too: Tab to move, arrow keys to choose.</p>
+  </section>
+
+  <section aria-labelledby="use-h">
+    <h2 id="use-h">How to use it</h2>
+    <ol class="steps">
+      <li>Copy the code below.</li>
+      <li>Open your page in your LMS’s HTML source editor and paste it where you want the activity.</li>
+      <li>Edit the goal, the two designs and the feedback. Every spot to change is marked <code>EDIT</code>, and the comment at the top explains the rest.</li>
+      <li>Save, then test it with a mouse and with the keyboard only. If something looks wrong after saving, your editor may be removing code. Note what changed and add it to your project instructions.</li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="code-h">
+    <div class="code-head">
+      <h2 id="code-h">The code</h2>
+      <button type="button" class="copy" id="copy-btn">Copy code</button>
+    </div>
+    <pre id="code" tabindex="0" aria-label="Starter snippet code"><code>&lt;!--
+  STARTER SNIPPET: Compare two designs, choose the stronger one
+  ETUG Fall Workshop 2026, "No Plugin or Integration Required"
+
+  HOW TO USE
+  1. Open your LMS page in its HTML source editor.
+  2. Paste this whole snippet where you want the interaction to appear.
+  3. Save, then test it: click through it, then try it with the keyboard only
+     (Tab to move, arrow keys to choose, Enter or Space on the buttons).
+
+  WHAT TO CHANGE
+  - The goal, the two designs and the feedback text (search for "EDIT").
+  - Which option is correct: the data-answer attribute on the &lt;form>.
+  - Colours: search for the hex values (e.g. #8E0F09) and replace them.
+  - The prefix "tiy1-": if you put two of these on one page, change it to
+    "tiy2-" (or similar) everywhere in the second copy so they don't collide.
+
+  WHY IT'S BUILT THIS WAY
+  - All CSS is inline because many LMS editors strip &lt;style> blocks on save.
+    Hover and focus effects are done in JavaScript for the same reason.
+  - Every property is set explicitly so the LMS or template stylesheet
+    can't restyle the buttons, fieldset or labels.
+  - The fieldset's legend is visually hidden; the visible question is a
+    paragraph linked with aria-describedby, which avoids the legend "notch".
+  - The real radio buttons are visually hidden, not removed, so keyboards and
+    screen readers still use them. The visible circles are drawn with spans.
+  - Start Over clears the drawn circles itself, because form.reset()
+    doesn't fire change events.
+  - The script is wrapped in an IIFE so it can't clash with other scripts.
+-->
+&lt;div id="tiy1-wrap" style="box-sizing:border-box; max-width:760px; margin:1.5rem 0; padding:1.5rem; background:#ECECEC; border:1px solid #CFCFCF; border-radius:6px; font-family:inherit; font-size:1rem; line-height:1.5; color:#1F2224;">
+
+  &lt;h3 style="margin:0 0 0.5rem 0; font-size:1.25rem; font-weight:700; line-height:1.3; color:#1F2224;">Try It Yourself&lt;/h3>
+
+  &lt;!-- EDIT: instructions to the learner -->
+  &lt;p style="margin:0 0 1rem 0; color:#494C4E;">Read the goal, compare the two quiz questions, and choose the one that does a better job of meeting it. This is a self-check with no grade attached.&lt;/p>
+
+  &lt;!-- data-answer = the value of the correct option ("a" or "b") -->
+  &lt;form id="tiy1-form" data-answer="b" style="margin:0; padding:0;">
+
+    &lt;fieldset style="box-sizing:border-box; margin:0 0 1rem 0; padding:1rem 1.25rem; min-width:0; background:#FFFFFF; border:1px solid #CCCCCC; border-radius:6px;">
+      &lt;legend style="position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;">Choose the stronger design&lt;/legend>
+
+      &lt;!-- EDIT: the goal both designs are judged against -->
+      &lt;p id="tiy1-goal" style="margin:0 0 1rem 0; font-weight:600; color:#1F2224;">Goal: Students can apply the idea of opportunity cost to an everyday decision. Which quiz question checks that better?&lt;/p>
+
+      &lt;div style="display:flex; flex-wrap:wrap; gap:1rem;">
+
+        &lt;!-- Option A -->
+        &lt;label for="tiy1-a" style="box-sizing:border-box; flex:1 1 260px; display:flex; gap:0.75rem; align-items:flex-start; margin:0; padding:1rem; background:#F7F7F7; border:1px solid #CCCCCC; border-radius:6px; cursor:pointer; font-weight:400; color:#1F2224;">
+          &lt;input type="radio" id="tiy1-a" name="tiy1-choice" value="a" aria-describedby="tiy1-goal" style="position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;">
+          &lt;span class="tiy1-circle" aria-hidden="true" style="box-sizing:border-box; flex:0 0 auto; display:flex; align-items:center; justify-content:center; width:1.25rem; height:1.25rem; margin-top:0.15rem; border:2px solid #494C4E; border-radius:50%; background:#FFFFFF;">
+            &lt;span class="tiy1-dot" style="display:none; width:0.6rem; height:0.6rem; border-radius:50%; background:#1F2224;">&lt;/span>
+          &lt;/span>
+          &lt;span style="display:block;">
+            &lt;span style="display:block; font-weight:700; margin-bottom:0.25rem;">Design A&lt;/span>
+            &lt;!-- EDIT: design A -->
+            &lt;span style="display:block;">“Define opportunity cost.”&lt;/span>
+          &lt;/span>
+        &lt;/label>
+
+        &lt;!-- Option B -->
+        &lt;label for="tiy1-b" style="box-sizing:border-box; flex:1 1 260px; display:flex; gap:0.75rem; align-items:flex-start; margin:0; padding:1rem; background:#F7F7F7; border:1px solid #CCCCCC; border-radius:6px; cursor:pointer; font-weight:400; color:#1F2224;">
+          &lt;input type="radio" id="tiy1-b" name="tiy1-choice" value="b" aria-describedby="tiy1-goal" style="position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;">
+          &lt;span class="tiy1-circle" aria-hidden="true" style="box-sizing:border-box; flex:0 0 auto; display:flex; align-items:center; justify-content:center; width:1.25rem; height:1.25rem; margin-top:0.15rem; border:2px solid #494C4E; border-radius:50%; background:#FFFFFF;">
+            &lt;span class="tiy1-dot" style="display:none; width:0.6rem; height:0.6rem; border-radius:50%; background:#1F2224;">&lt;/span>
+          &lt;/span>
+          &lt;span style="display:block;">
+            &lt;span style="display:block; font-weight:700; margin-bottom:0.25rem;">Design B&lt;/span>
+            &lt;!-- EDIT: design B -->
+            &lt;span style="display:block;">“You have $50 and can buy either a used textbook or a concert ticket. You buy the textbook. What is your opportunity cost, and why?”&lt;/span>
+          &lt;/span>
+        &lt;/label>
+
+      &lt;/div>
+    &lt;/fieldset>
+
+    &lt;div style="display:flex; flex-wrap:wrap; gap:0.75rem;">
+      &lt;button type="button" id="tiy1-check" style="box-sizing:border-box; margin:0; padding:0.5rem 1rem; font:inherit; font-weight:600; line-height:1.4; color:#FFFFFF; background:#1F2224; border:2px solid #1F2224; border-radius:4px; cursor:pointer; outline:none;">Check my answer&lt;/button>
+      &lt;button type="button" id="tiy1-reset" style="box-sizing:border-box; margin:0; padding:0.5rem 1rem; font:inherit; font-weight:600; line-height:1.4; color:#1F2224; background:#FFFFFF; border:2px solid #1F2224; border-radius:4px; cursor:pointer; outline:none;">Start over&lt;/button>
+    &lt;/div>
+
+    &lt;!-- Feedback appears here. role="status" means screen readers announce it. -->
+    &lt;div id="tiy1-feedback" role="status" style="display:none; margin-top:1rem; padding:0.75rem 1rem; border-left:5px solid transparent; border-radius:4px; color:#1F2224;">&lt;/div>
+
+  &lt;/form>
+&lt;/div>
+
+&lt;script>
+(function () {
+  "use strict";
+
+  var form = document.getElementById("tiy1-form");
+  if (!form) { return; }
+
+  var radios = form.querySelectorAll('input[name="tiy1-choice"]');
+  var checkBtn = document.getElementById("tiy1-check");
+  var resetBtn = document.getElementById("tiy1-reset");
+  var feedback = document.getElementById("tiy1-feedback");
+
+  // EDIT: feedback for each choice. Explain why, not just right or wrong.
+  var FEEDBACK = {
+    a: "Design A asks students to recall a definition. Someone could answer it perfectly without being able to use the idea. Design B is stronger for this goal.",
+    b: "Design B puts students in a realistic decision and asks them to apply the idea and explain their reasoning. That's what the goal asks for. Design A only checks whether they remember the definition."
+  };
+
+  // Colours. Status is always stated in words too, never by colour alone.
+  var COLOURS = {
+    correct:   { text: "#1B5E20", border: "#1B5E20", bg: "#E8F5E9" },
+    incorrect: { text: "#8E0F09", border: "#8E0F09", bg: "#FBEAEA" },
+    focus: "#3243DC"
+  };
+
+  // Show the drawn dot for whichever real radio button is checked.
+  function syncDots() {
+    radios.forEach(function (radio) {
+      var dot = radio.parentNode.querySelector(".tiy1-dot");
+      dot.style.display = radio.checked ? "block" : "none";
+    });
+  }
+
+  radios.forEach(function (radio) {
+    var circle = radio.parentNode.querySelector(".tiy1-circle");
+    var card = radio.parentNode;
+
+    radio.addEventListener("change", syncDots);
+
+    // Focus is shown on the drawn circle and its card, since the real input is hidden.
+    radio.addEventListener("focus", function () {
+      circle.style.outline = "3px solid " + COLOURS.focus;
+      circle.style.outlineOffset = "2px";
+      card.style.borderColor = COLOURS.focus;
+    });
+    radio.addEventListener("blur", function () {
+      circle.style.outline = "none";
+      card.style.borderColor = "#CCCCCC";
+    });
+  });
+
+  function showFeedback(kind, heading, text) {
+    var c = COLOURS[kind];
+    feedback.style.display = "block";
+    feedback.style.background = c.bg;
+    feedback.style.borderLeftColor = c.border;
+    feedback.innerHTML = "";
+    var strong = document.createElement("strong");
+    strong.textContent = heading + " ";
+    strong.style.color = c.text;
+    feedback.appendChild(strong);
+    feedback.appendChild(document.createTextNode(text));
+  }
+
+  checkBtn.addEventListener("click", function () {
+    var selected = form.querySelector('input[name="tiy1-choice"]:checked');
+    if (!selected) {
+      showFeedback("incorrect", "Choose a design first.", "Select Design A or Design B, then check your answer.");
+      return;
+    }
+    var isCorrect = selected.value === form.getAttribute("data-answer");
+    showFeedback(isCorrect ? "correct" : "incorrect", isCorrect ? "Correct." : "Not quite.", FEEDBACK[selected.value]);
+  });
+
+  resetBtn.addEventListener("click", function () {
+    form.reset();
+    // form.reset() doesn't fire change events, so clear the drawn dots by hand.
+    syncDots();
+    feedback.style.display = "none";
+    feedback.innerHTML = "";
+    radios[0].focus();
+  });
+
+  // Hover and focus styles for the buttons (done in JavaScript because
+  // many LMS editors strip the &lt;style> blocks that would normally hold them).
+  function addButtonStates(btn, normalBg, normalText, hoverBg, hoverText) {
+    function on()  { btn.style.background = hoverBg;  btn.style.color = hoverText; }
+    function off() { btn.style.background = normalBg; btn.style.color = normalText; }
+    btn.addEventListener("mouseenter", on);
+    btn.addEventListener("mouseleave", off);
+    btn.addEventListener("focus", function () {
+      btn.style.outline = "3px solid " + COLOURS.focus;
+      btn.style.outlineOffset = "2px";
+    });
+    btn.addEventListener("blur", function () { btn.style.outline = "none"; });
+  }
+  addButtonStates(checkBtn, "#1F2224", "#FFFFFF", "#494C4E", "#FFFFFF");
+  addButtonStates(resetBtn, "#FFFFFF", "#1F2224", "#ECECEC", "#1F2224");
+})();
+&lt;/script>
+</code></pre>
+    <p class="status" id="copy-status" role="status"></p>
+  </section>
+
+  <p class="note">Built with an AI assistant using the <a href="https://claude.ai/artifact/YJEFBcG28TznGmhVPsxq5V" target="_blank" rel="noopener">sample project instructions</a> from the session. Briana Fraser, Langara College.</p>
+</main>
+
+<script>
+  (function () {
+    var btn = document.getElementById("copy-btn");
+    var code = document.getElementById("code");
+    var status = document.getElementById("copy-status");
+    function selectCode() {
+      var range = document.createRange();
+      range.selectNodeContents(code);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+    btn.addEventListener("click", function () {
+      var text = code.textContent;
+      try {
+        navigator.clipboard.writeText(text).then(function () {
+          status.textContent = "Copied. Paste it into your page’s HTML source editor.";
+        }, function () {
+          selectCode();
+          status.textContent = "Your browser blocked copying. The code is selected, so press Ctrl+C (or Cmd+C) to copy it.";
+        });
+      } catch (e) {
+        selectCode();
+        status.textContent = "Your browser blocked copying. The code is selected, so press Ctrl+C (or Cmd+C) to copy it.";
+      }
+    });
+  })();
+</script>
+
+</body></html>
